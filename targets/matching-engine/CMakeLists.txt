@@ -1,0 +1,31 @@
+cmake_minimum_required(VERSION 3.20)
+project(matching_engine VERSION 0.1.0 LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+option(ENABLE_SANITIZERS "Enable address and undefined-behavior sanitizers" OFF)
+
+add_library(matching INTERFACE)
+target_include_directories(matching INTERFACE include)
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+  target_compile_options(matching INTERFACE -Wall -Wextra -Wpedantic -Wconversion -Wshadow)
+  if(ENABLE_SANITIZERS)
+    target_compile_options(matching INTERFACE -fsanitize=address,undefined -fno-omit-frame-pointer)
+    target_link_options(matching INTERFACE -fsanitize=address,undefined)
+  endif()
+endif()
+
+add_executable(matching-engine src/main.cpp)
+target_link_libraries(matching-engine PRIVATE matching)
+add_executable(matching-tests tests/test_engine.cpp)
+target_link_libraries(matching-tests PRIVATE matching)
+add_executable(matching-bench src/benchmark.cpp)
+target_link_libraries(matching-bench PRIVATE matching)
+
+enable_testing()
+add_test(NAME engine COMMAND matching-tests)
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
+add_test(NAME cli COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_cli.py $<TARGET_FILE:matching-engine>)
+set_tests_properties(cli PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})

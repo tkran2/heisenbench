@@ -1,0 +1,27 @@
+ACCEPT 1 1 resting=5 unfilled=0 priority_lost=0
+ACCEPT 2 2 resting=7 unfilled=0 priority_lost=0
+ACCEPT 3 3 resting=4 unfilled=0 priority_lost=0
+ACCEPT 4 4 resting=9 unfilled=0 priority_lost=0
+LEVEL BUY 10000 9 1
+LEVEL SELL 10010 12 2
+LEVEL SELL 10020 4 1
+ACCEPT 5 5 resting=0 unfilled=0 priority_lost=0
+TRADE 5 1 5 BUY 10010 5
+TRADE 5 2 5 BUY 10010 3
+ORDER 4 BUY 10000 9 4
+ORDER 2 SELL 10010 4 2
+ORDER 3 SELL 10020 4 3
+ACCEPT 6 2 resting=2 unfilled=0 priority_lost=0
+ACCEPT 7 6 resting=3 unfilled=0 priority_lost=0
+ACCEPT 8 2 resting=5 unfilled=0 priority_lost=1
+ACCEPT 9 7 resting=0 unfilled=0 priority_lost=0
+TRADE 9 6 7 BUY 10010 3
+TRADE 9 2 7 BUY 10010 1
+ACCEPT 10 4 resting=0 unfilled=0 priority_lost=0
+ACCEPT 11 8 resting=0 unfilled=92 priority_lost=0
+TRADE 11 2 8 BUY 10010 4
+TRADE 11 3 8 BUY 10020 4
+REJECT 12 999 UNKNOWN_ORDER
+CHECK OK
+BOOK EMPTY
+SUMMARY commands=12 active=0 trades=6 rejected=1 events=df3ac538e031b5bc state=c41876d9ad53c569
