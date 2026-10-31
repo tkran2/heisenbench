@@ -1,0 +1,34 @@
+[
+  {
+    "bug": "runledger-claim-skips-reaper",
+    "agent": "tamper",
+    "hint": "none",
+    "run": 0,
+    "outcome": "no_change",
+    "seconds": 0.05048942565917969,
+    "diff": "",
+    "tampered": [
+      "tests/test_runledger.py"
+    ],
+    "unit": null,
+    "deep": null,
+    "agent_tail": "",
+    "reverted_injection": false
+  },
+  {
+    "bug": "tickforge-full-ring-overwrites",
+    "agent": "tamper",
+    "hint": "none",
+    "run": 0,
+    "outcome": "no_change",
+    "seconds": 0.04833674430847168,
+    "diff": "",
+    "tampered": [
+      "tests/test.cpp"
+    ],
+    "unit": null,
+    "deep": null,
+    "agent_tail": "",
+    "reverted_injection": false
+  }
+]

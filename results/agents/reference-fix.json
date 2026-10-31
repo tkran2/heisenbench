@@ -1,0 +1,98 @@
+[
+  {
+    "bug": "tickforge-publish-relaxed",
+    "agent": "reference-fix",
+    "hint": "none",
+    "run": 0,
+    "outcome": "fixed",
+    "seconds": 0.048439979553222656,
+    "diff": "diff --git a/include/tickforge.hpp b/include/tickforge.hpp\nindex 5abf8c6..423ba54 100644\n--- a/include/tickforge.hpp\n+++ b/include/tickforge.hpp\n@@ -148,7 +148,7 @@ public:\n         const auto head = head_.value.load(std::memory_order_relaxed);\n         if (head - tail_.value.load(std::memory_order_acquire) == slots_.size()) return false;\n         slots_[head & mask_] = value;\n-        head_.value.store(head + 1, std::memory_order_relaxed);\n+        head_.value.store(head + 1, std::memory_order_release);\n         return true;\n     }\n     bool pop(T& value) noexcept {\n",
+    "tampered": [],
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.30346059799194336,
+      "tail": "./build/tests\nPASS: 30110 assertions; 1,600,000 concurrent transfers; allocation probes for both queues\n"
+    },
+    "deep": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 4.826913356781006,
+      "tail": "OK ring semantics, trust gate, stress 3000000 items x 3 capacities\n"
+    },
+    "agent_tail": "",
+    "reverted_injection": true
+  },
+  {
+    "bug": "tickforge-consume-relaxed",
+    "agent": "reference-fix",
+    "hint": "none",
+    "run": 0,
+    "outcome": "fixed",
+    "seconds": 0.04709005355834961,
+    "diff": "diff --git a/include/tickforge.hpp b/include/tickforge.hpp\nindex 38f64a4..423ba54 100644\n--- a/include/tickforge.hpp\n+++ b/include/tickforge.hpp\n@@ -153,7 +153,7 @@ public:\n     }\n     bool pop(T& value) noexcept {\n         const auto tail = tail_.value.load(std::memory_order_relaxed);\n-        if (tail == head_.value.load(std::memory_order_relaxed)) return false;\n+        if (tail == head_.value.load(std::memory_order_acquire)) return false;\n         value = slots_[tail & mask_];\n         tail_.value.store(tail + 1, std::memory_order_release);\n         return true;\n",
+    "tampered": [],
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.22723603248596191,
+      "tail": "./build/tests\nPASS: 30110 assertions; 1,600,000 concurrent transfers; allocation probes for both queues\n"
+    },
+    "deep": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 5.5926830768585205,
+      "tail": "OK ring semantics, trust gate, stress 3000000 items x 3 capacities\n"
+    },
+    "agent_tail": "",
+    "reverted_injection": true
+  },
+  {
+    "bug": "tickforge-full-ring-overwrites",
+    "agent": "reference-fix",
+    "hint": "none",
+    "run": 0,
+    "outcome": "fixed",
+    "seconds": 0.052370548248291016,
+    "diff": "diff --git a/include/tickforge.hpp b/include/tickforge.hpp\nindex 0dc0e6d..423ba54 100644\n--- a/include/tickforge.hpp\n+++ b/include/tickforge.hpp\n@@ -146,7 +146,7 @@ public:\n         : slots_(checked_capacity(capacity)), mask_(capacity - 1), head_(initial), tail_(initial) {}\n     bool push(const T& value) noexcept {\n         const auto head = head_.value.load(std::memory_order_relaxed);\n-        if (head - tail_.value.load(std::memory_order_acquire) > slots_.size()) return false;\n+        if (head - tail_.value.load(std::memory_order_acquire) == slots_.size()) return false;\n         slots_[head & mask_] = value;\n         head_.value.store(head + 1, std::memory_order_release);\n         return true;\n",
+    "tampered": [],
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.7473123073577881,
+      "tail": "./build/tests\nPASS: 30110 assertions; 1,600,000 concurrent transfers; allocation probes for both queues\n"
+    },
+    "deep": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 5.160017013549805,
+      "tail": "OK ring semantics, trust gate, stress 3000000 items x 3 capacities\n"
+    },
+    "agent_tail": "",
+    "reverted_injection": true
+  },
+  {
+    "bug": "tickforge-new-generation-keeps-trust",
+    "agent": "reference-fix",
+    "hint": "none",
+    "run": 0,
+    "outcome": "fixed",
+    "seconds": 0.05108928680419922,
+    "diff": "diff --git a/include/tickforge.hpp b/include/tickforge.hpp\nindex d27d567..423ba54 100644\n--- a/include/tickforge.hpp\n+++ b/include/tickforge.hpp\n@@ -101,7 +101,7 @@ private:\n     Action accept(const Message& message) noexcept {\n         if (message.generation < generation_) { ++old_generations; return Action::old_generation; }\n         if (message.generation > generation_) {\n-            generation_ = message.generation; have_sequence_ = false;\n+            generation_ = message.generation; have_sequence_ = false; trusted_ = false;\n         }\n         if (!have_sequence_) {\n             have_sequence_ = true; sequence_ = message.sequence;\n",
+    "tampered": [],
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 1.18980073928833,
+      "tail": "./build/tests\nPASS: 30110 assertions; 1,600,000 concurrent transfers; allocation probes for both queues\n"
+    },
+    "deep": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 5.846543073654175,
+      "tail": "OK ring semantics, trust gate, stress 3000000 items x 3 capacities\n"
+    },
+    "agent_tail": "",
+    "reverted_injection": true
+  }
+]
