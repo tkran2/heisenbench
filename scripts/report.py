@@ -22,7 +22,8 @@ def oracle_section(lines):
     lines += ["## Which bugs do the repositories' own tests catch?", "",
               "| Target | Bug | Category | Unit tests | Deep oracle |", "| --- | --- | --- | --- | --- |"]
     tally = Counter()
-    for b in BUGS:
+    order = ["quorumlog", "matching-engine", "runledger", "tickforge"]
+    for b in sorted(BUGS, key=lambda b: order.index(b.target)):
         r = recs.get((b.target, b.id))
         if r is None or not r["build"]["ok"]:
             continue

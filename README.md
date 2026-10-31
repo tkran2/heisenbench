@@ -19,24 +19,56 @@ build, a test suite or an oracle.
 
 ## The bug library
 
-<!-- ORACLE_TABLE -->
+23 bugs across the four targets. **7 of the 23 are invisible to the repositories' own test suites**, although those suites are strong (QuorumLog's runs 240 simulated clusters, the matching engine's fuzzes 45,000 commands against its reference model); every bug is caught by a deep oracle.
+
+| Target | Bug | Category | Unit tests | Deep oracle |
+| --- | --- | --- | --- | --- |
+| quorumlog | `quorumlog-commit-unverified-suffix` | consensus safety | missed | caught (92s) |
+| quorumlog | `quorumlog-stale-snapshot-rolls-back` | consensus safety | caught | caught (85s) |
+| quorumlog | `quorumlog-vote-not-persisted` | consensus safety | caught | caught (91s) |
+| quorumlog | `quorumlog-follower-skips-term-check` | consensus safety | caught | caught (145s) |
+| quorumlog | `quorumlog-restore-merges-sessions` | exactly-once | caught | caught (27s) |
+| quorumlog | `quorumlog-compact-mislabels-snapshot` | snapshotting | caught | caught (13s) |
+| matching-engine | `matching-equal-amend-loses-priority` | priority rules | caught | caught (3s) |
+| matching-engine | `matching-amend-increase-keeps-priority` | priority rules | caught | caught (3s) |
+| matching-engine | `matching-trade-at-aggressor-price` | pricing | caught | caught (3s) |
+| matching-engine | `matching-amend-down-stale-level-total` | book accounting | caught | caught (3s) |
+| matching-engine | `matching-level-total-int32` | book accounting | missed | caught (4s) |
+| runledger | `runledger-deferred-transactions` | concurrency | caught | caught (47s) |
+| runledger | `runledger-lease-expiry-not-fenced` | lease fencing | caught | caught (0s) |
+| runledger | `runledger-extra-retry-after-failure` | retry accounting | caught | caught (1s) |
+| runledger | `runledger-claim-skips-reaper` | recovery | caught | caught (1s) |
+| runledger | `runledger-idempotency-ignores-attempt-limit` | idempotency | caught | caught (2s) |
+| runledger | `runledger-short-busy-timeout` | concurrency | missed | caught (3s) |
+| tickforge | `tickforge-publish-relaxed` | memory ordering | missed | caught (2s) |
+| tickforge | `tickforge-consume-relaxed` | memory ordering | missed | caught (1s) |
+| tickforge | `tickforge-full-ring-overwrites` | backpressure | caught | caught (1s) |
+| tickforge | `tickforge-new-generation-keeps-trust` | feed integrity | caught | caught (1s) |
+| tickforge | `tickforge-producer-reads-tail-relaxed` | memory ordering | missed | caught (1s) |
+| tickforge | `tickforge-consumer-frees-relaxed` | memory ordering | missed | caught (1s) |
 
 Each bug is a one- to three-line edit of the kind people really make: a dropped
 condition, a flipped boundary, a relaxed memory order, a narrowed integer, a guard
 removed from a rare path. Agents see the issue text only; the edit and its
 explanation stay in `heisenbench/bugspecs.py`.
 
-One candidate was rejected after validation. Letting `InstallSnapshot` keep a log
-suffix without checking its term looks like a safety bug, but no check fires in
-10,000 simulated clusters, and for a good reason: a follower only commits through
-the prefix it has just verified against the leader, so stale entries are always
-repaired before they can be applied. It is kept in `REJECTED` as an example of
-defense in depth turning a bug into an equivalent mutant.
+Two candidates were rejected after validation and are kept in `REJECTED`:
+
+- Letting `InstallSnapshot` keep a log suffix without checking its term looks like a
+  safety bug, but no check fires in 10,000 simulated clusters, and for a good reason:
+  a follower only commits through the prefix it has just verified against the
+  leader, so stale entries are always repaired before they can be applied. Defense in
+  depth turns it into an equivalent mutant.
+- Dropping the guard that discards a staged local snapshot after a newer one was
+  installed is a real race, but neither the unit tests nor the simulator ever reach
+  that interleaving, so it cannot be scored.
 
 ## How an agent run is scored
 
 1. A fresh git checkout of the buggy target is created, and the agent command runs in
-   it with the issue text as its prompt (any CLI agent works; see below).
+   it with the issue text as its prompt (any CLI agent works). The included Claude
+   Code agent (`scripts/agents/claude_code.sh`) runs headless with file edits allowed
+   and shell access limited to building, testing and inspecting the repository.
 2. The harness records the agent's diff, then restores every oracle file (tests,
    simulator, checker, build files) from the pristine snapshot. Edits to them are
    reported as tampering and discarded, so a patch cannot pass by weakening a check.
@@ -61,7 +93,7 @@ Requirements: a C++20 compiler with ThreadSanitizer, make, Python 3.10+.
 python scripts/validate_bugs.py            # every bug through unit tests and deep oracle
 python scripts/run_agents.py --agent reference-fix --cmd 'python3 {repo}/scripts/reference_agent.py fix {workdir}'
 python scripts/run_agents.py --agent claude-code --hints none oracle \
-    --cmd 'claude -p "$(cat {prompt_file})" --dangerously-skip-permissions'
+    --cmd 'sh {repo}/scripts/agents/claude_code.sh {prompt_file}'
 python scripts/report.py                   # results/SUMMARY.md
 ```
 

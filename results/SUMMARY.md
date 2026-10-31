@@ -14,17 +14,17 @@
 | matching-engine | `matching-amend-increase-keeps-priority` | priority rules | caught | caught (3s) |
 | matching-engine | `matching-trade-at-aggressor-price` | pricing | caught | caught (3s) |
 | matching-engine | `matching-amend-down-stale-level-total` | book accounting | caught | caught (3s) |
+| matching-engine | `matching-level-total-int32` | book accounting | missed | caught (4s) |
 | runledger | `runledger-deferred-transactions` | concurrency | caught | caught (47s) |
 | runledger | `runledger-lease-expiry-not-fenced` | lease fencing | caught | caught (0s) |
 | runledger | `runledger-extra-retry-after-failure` | retry accounting | caught | caught (1s) |
 | runledger | `runledger-claim-skips-reaper` | recovery | caught | caught (1s) |
 | runledger | `runledger-idempotency-ignores-attempt-limit` | idempotency | caught | caught (2s) |
+| runledger | `runledger-short-busy-timeout` | concurrency | missed | caught (3s) |
 | tickforge | `tickforge-publish-relaxed` | memory ordering | missed | caught (2s) |
 | tickforge | `tickforge-consume-relaxed` | memory ordering | missed | caught (1s) |
 | tickforge | `tickforge-full-ring-overwrites` | backpressure | caught | caught (1s) |
 | tickforge | `tickforge-new-generation-keeps-trust` | feed integrity | caught | caught (1s) |
-| matching-engine | `matching-level-total-int32` | book accounting | missed | caught (4s) |
-| runledger | `runledger-short-busy-timeout` | concurrency | missed | caught (3s) |
 | tickforge | `tickforge-producer-reads-tail-relaxed` | memory ordering | missed | caught (1s) |
 | tickforge | `tickforge-consumer-frees-relaxed` | memory ordering | missed | caught (1s) |
 
