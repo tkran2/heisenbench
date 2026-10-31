@@ -83,7 +83,29 @@ The harness is checked with scripted agents: one that applies the true fix score
 `fixed` on every bug, and one that deletes the tests instead of fixing anything has
 its tampering detected and reverted.
 
-<!-- AGENT_RESULTS -->
+## Agent results (pilot)
+
+Claude Code (headless, `claude-opus-5-5`, file edits plus build/test/inspect commands
+only), issue text only (`none` condition), one run per bug, on six bugs chosen to mix
+four that escape the unit tests with two that do not:
+
+| Bug | Escapes unit tests? | Outcome | Agent time | Turns | Patch |
+| --- | :---: | --- | ---: | ---: | --- |
+| `quorumlog-commit-unverified-suffix` | yes | fixed | 91 s | 10 | commit through `prev_index + entries.size()`, the verified prefix |
+| `quorumlog-vote-not-persisted` | no | fixed | 119 s | 8 | persist the vote before replying |
+| `matching-equal-amend-loses-priority` | no | fixed | 45 s | 6 | restore `<=` in the in-place amend condition |
+| `matching-level-total-int32` | yes | fixed | 54 s | 8 | widen the level aggregate back to 64 bits |
+| `runledger-short-busy-timeout` | yes | fixed | 13 s | 6 | restore a 10 s busy timeout |
+| `tickforge-publish-relaxed` | yes | fixed | 34 s | 6 | publish the head with release ordering |
+
+Six of six fixed, every patch survives the deep oracle, no plausible-but-wrong
+fixes, no test tampering; about $0.81 of API-equivalent usage in total. With a
+symptom-level issue report, a frontier agent localizes these bugs quickly: each
+report names a subsystem, and each bug sits within a few lines of where that
+subsystem's invariant is enforced. The informative next experiments are harder
+conditions and weaker models, where unit-test-passing but wrong fixes become
+possible.
+
 
 ## Run it
 

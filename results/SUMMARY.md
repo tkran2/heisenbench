@@ -30,3 +30,18 @@
 
 caught by both: 16, escapes unit tests: 7
 
+## Agent results
+
+| Agent | Hint | Runs | Fixed | Plausible but wrong | Unit tests fail | Build fails | No change |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| claude-code | none | 6 | 6 | 0 | 0 | 0 | 0 |
+
+| Agent | Bug | Outcomes |
+| --- | --- | --- |
+| claude-code | `matching-equal-amend-loses-priority` | fixed |
+| claude-code | `matching-level-total-int32` | fixed |
+| claude-code | `quorumlog-commit-unverified-suffix` | fixed |
+| claude-code | `quorumlog-vote-not-persisted` | fixed |
+| claude-code | `runledger-short-busy-timeout` | fixed |
+| claude-code | `tickforge-publish-relaxed` | fixed |
+

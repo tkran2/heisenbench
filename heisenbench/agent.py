@@ -70,6 +70,7 @@ class AgentResult:
     deep: dict | None = None
     agent_tail: str = ""
     reverted_injection: bool = False
+    agent_meta: dict = field(default_factory=dict)
 
     def to_dict(self):
         return asdict(self)
@@ -97,9 +98,16 @@ def run_agent(bug: Bug, agent_name: str, agent_cmd: str, hint: str, run_index: i
 
     cmd = agent_cmd.format(prompt_file=shlex.quote(str(prompt_file)), workdir=shlex.quote(str(work)))
     t0 = time.time()
+    meta = {}
     try:
         p = subprocess.run(cmd, shell=True, cwd=work, capture_output=True, text=True, timeout=timeout)
         tail = (p.stdout + p.stderr)[-4000:]
+        try:  # agents that print a JSON result (e.g. claude -p --output-format json)
+            out = json.loads(p.stdout)
+            meta = {k: out.get(k) for k in ("num_turns", "total_cost_usd", "duration_ms", "result", "is_error")}
+            meta["models"] = list(out.get("modelUsage", {}).keys())
+        except (json.JSONDecodeError, AttributeError):
+            pass
     except subprocess.TimeoutExpired as e:
         tail = "AGENT TIMEOUT\n" + ((e.stdout or b"").decode(errors="replace"))[-3000:]
     seconds = time.time() - t0
@@ -111,7 +119,7 @@ def run_agent(bug: Bug, agent_name: str, agent_cmd: str, hint: str, run_index: i
     reverted = all(e.old in (work / e.file).read_text() for e in bug.edits)
 
     res = AgentResult(bug=bug.id, agent=agent_name, hint=hint, run=run_index, outcome="", seconds=seconds,
-                      diff=diff, tampered=tampered, agent_tail=tail, reverted_injection=reverted)
+                      diff=diff, tampered=tampered, agent_tail=tail, reverted_injection=reverted, agent_meta=meta)
     if not diff.strip():
         res.outcome = "no_change"
         return res
