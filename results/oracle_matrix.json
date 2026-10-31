@@ -1,0 +1,640 @@
+[
+  {
+    "target": "matching-engine",
+    "bug": null,
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 6.552229166030884,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/main.cpp -o build/matching-engine \ng++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_engine.cpp -o build/matching-tests \n"
+    },
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 4.307311058044434,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/benchmark.cpp -o build/matching-bench \nbuild/matching-tests\nPASS 36 scenarios, 73718 assertions, 45000 randomized commands against independent reference\npython3 tests/test_cli.py build/matching-engine\n.......\n----------------------------------------------------------------------\nRan 7 tests in 0.052s\n\nOK\n"
+    },
+    "deep": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 3.927680730819702,
+      "tail": "OK 600000 commands across 5 regimes\n"
+    }
+  },
+  {
+    "target": "matching-engine",
+    "bug": "matching-equal-amend-loses-priority",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 6.350468158721924,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/main.cpp -o build/matching-engine \ng++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_engine.cpp -o build/matching-tests \n"
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 2,
+      "seconds": 4.275010347366333,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/benchmark.cpp -o build/matching-bench \nbuild/matching-tests\nFAIL same size retains priority: line 115: !e.amend(1, 100, 2).priority_lost\nmake: *** [Makefile:25: test] Error 1\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 3.131023645401001,
+      "tail": "MISMATCH regime=baseline seed=7932 step=10 amend\n  reference: seq=11 id=8 reject=NONE resting=22 unfilled=0 priority_lost=0 trades=[]\n  tree:      seq=11 id=8 reject=NONE resting=22 unfilled=0 priority_lost=1 trades=[]\n  flat:      seq=11 id=8 reject=NONE resting=22 unfilled=0 priority_lost=1 trades=[]\nFAIL differential mismatch (regime baseline, seed 1)\n"
+    }
+  },
+  {
+    "target": "matching-engine",
+    "bug": "matching-amend-increase-keeps-priority",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 6.5548014640808105,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/main.cpp -o build/matching-engine \ng++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_engine.cpp -o build/matching-tests \n"
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 2,
+      "seconds": 4.357050895690918,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/benchmark.cpp -o build/matching-bench \nbuild/matching-tests\nFAIL increase loses priority: line 109: e.amend(1, 100, 4).priority_lost\nmake: *** [Makefile:25: test] Error 1\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 3.0809903144836426,
+      "tail": "MISMATCH regime=baseline seed=7932 step=168 amend\n  reference: seq=169 id=115 reject=NONE resting=4 unfilled=0 priority_lost=1 trades=[]\n  tree:      seq=169 id=115 reject=NONE resting=4 unfilled=0 priority_lost=0 trades=[]\n  flat:      seq=169 id=115 reject=NONE resting=4 unfilled=0 priority_lost=0 trades=[]\nFAIL differential mismatch (regime baseline, seed 1)\n"
+    }
+  },
+  {
+    "target": "matching-engine",
+    "bug": "matching-trade-at-aggressor-price",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 6.519141912460327,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/main.cpp -o build/matching-engine \ng++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_engine.cpp -o build/matching-tests \n"
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 2,
+      "seconds": 4.165072917938232,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/benchmark.cpp -o build/matching-bench \nbuild/matching-tests\nFAIL best ask before older expensive ask: line 56: result.trades == std::vector<Trade>{{2, 3, Side::Buy, 100, 5}, {1, 3, Side::Buy, 101, 2}}\nmake: *** [Makefile:25: test] Error 1\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 3.12351131439209,
+      "tail": "MISMATCH regime=baseline seed=7932 step=1 submit\n  reference: seq=2 id=2 reject=NONE resting=1 unfilled=0 priority_lost=0 trades=[(1@9987x3)]\n  tree:      seq=2 id=2 reject=NONE resting=1 unfilled=0 priority_lost=0 trades=[(1@10018x3)]\n  flat:      seq=2 id=2 reject=NONE resting=1 unfilled=0 priority_lost=0 trades=[(1@10018x3)]\nFAIL differential mismatch (regime baseline, seed 1)\n"
+    }
+  },
+  {
+    "target": "matching-engine",
+    "bug": "matching-amend-down-stale-level-total",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 6.402702569961548,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/main.cpp -o build/matching-engine \ng++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_engine.cpp -o build/matching-tests \n"
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 2,
+      "seconds": 4.210579872131348,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/benchmark.cpp -o build/matching-bench \nbuild/matching-tests\nFAIL reduction retains priority: book invariant: level aggregate mismatch\nmake: *** [Makefile:25: test] Error 1\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 3.150780200958252,
+      "tail": "FAIL book invariant: level aggregate mismatch (regime baseline, seed 1)\n"
+    }
+  },
+  {
+    "target": "tickforge",
+    "bug": null,
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 2.164216995239258,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror tests/test.cpp -pthread -o build/tests\n"
+    },
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.6653709411621094,
+      "tail": "./build/tests\nPASS: 30110 assertions; 1,600,000 concurrent transfers; allocation probes for both queues\n"
+    },
+    "deep": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 6.392745733261108,
+      "tail": "OK ring semantics, trust gate, stress 3000000 items x 3 capacities\n"
+    }
+  },
+  {
+    "target": "tickforge",
+    "bug": "tickforge-publish-relaxed",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 2.094365119934082,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror tests/test.cpp -pthread -o build/tests\n"
+    },
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 1.5137310028076172,
+      "tail": "./build/tests\nPASS: 30110 assertions; 1,600,000 concurrent transfers; allocation probes for both queues\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 66,
+      "seconds": 1.7507877349853516,
+      "tail": "0)\n    #9 stress /home/user/heisenbench/oracles/tickforge_deep.cpp:64 (tickforge-deep-tsan+0x3e10)\n    #10 main /home/user/heisenbench/oracles/tickforge_deep.cpp:127 (tickforge-deep-tsan+0x3e10)\n\n  Thread T2 (tid=16623, running) created by main thread at:\n    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)\n    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)\n    #2 __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58 (libc.so.6+0x2a1c9) (BuildId: a4a7992a8e66555c8141ab2a08a8465ff6e0ea65)\n\n  Thread T1 (tid=16622, running) created by main thread at:\n    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)\n    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)\n    #2 __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58 (libc.so.6+0x2a1c9) (BuildId: a4a7992a8e66555c8141ab2a08a8465ff6e0ea65)\n\nSUMMARY: ThreadSanitizer: data race /tmp/heisenbench-5wom4xl9/tickforge-publish-relaxed/include/tickforge.hpp:157 in pop\n==================\n"
+    }
+  },
+  {
+    "target": "tickforge",
+    "bug": "tickforge-consume-relaxed",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 1.9727864265441895,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror tests/test.cpp -pthread -o build/tests\n"
+    },
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.302706241607666,
+      "tail": "./build/tests\nPASS: 30110 assertions; 1,600,000 concurrent transfers; allocation probes for both queues\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 66,
+      "seconds": 1.249366283416748,
+      "tail": "0)\n    #9 stress /home/user/heisenbench/oracles/tickforge_deep.cpp:64 (tickforge-deep-tsan+0x3e10)\n    #10 main /home/user/heisenbench/oracles/tickforge_deep.cpp:127 (tickforge-deep-tsan+0x3e10)\n\n  Thread T2 (tid=16654, running) created by main thread at:\n    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)\n    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)\n    #2 __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58 (libc.so.6+0x2a1c9) (BuildId: a4a7992a8e66555c8141ab2a08a8465ff6e0ea65)\n\n  Thread T1 (tid=16653, running) created by main thread at:\n    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)\n    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)\n    #2 __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58 (libc.so.6+0x2a1c9) (BuildId: a4a7992a8e66555c8141ab2a08a8465ff6e0ea65)\n\nSUMMARY: ThreadSanitizer: data race /tmp/heisenbench-5wom4xl9/tickforge-consume-relaxed/include/tickforge.hpp:157 in pop\n==================\n"
+    }
+  },
+  {
+    "target": "tickforge",
+    "bug": "tickforge-full-ring-overwrites",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 2.085604667663574,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror tests/test.cpp -pthread -o build/tests\n"
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 2,
+      "seconds": 0.03195786476135254,
+      "tail": "./build/tests\nFAIL: line 75: !queue.push(8)\nmake: *** [Makefile:17: test] Error 1\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 1.0228931903839111,
+      "tail": "FAIL push into a full ring succeeded\n"
+    }
+  },
+  {
+    "target": "tickforge",
+    "bug": "tickforge-new-generation-keeps-trust",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 2.082707166671753,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror tests/test.cpp -pthread -o build/tests\n"
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 2,
+      "seconds": 0.028229713439941406,
+      "tail": "./build/tests\nFAIL: line 66: !state.trusted()\nmake: *** [Makefile:17: test] Error 1\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 1.1297917366027832,
+      "tail": "FAIL gate stayed open after a generation change without a snapshot\n"
+    }
+  },
+  {
+    "target": "runledger",
+    "bug": null,
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.0,
+      "tail": ""
+    },
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 3.935647487640381,
+      "tail": "{\"job\": \"58cb0c6054504ee2a477da7c0b712d89\", \"attempt\": 1, \"committed\": true}\n{\"job\": \"3c503e3fb75149b68829ce023c8199d3\", \"attempt\": 1, \"committed\": true}\n...............\n----------------------------------------------------------------------\nRan 15 tests in 3.724s\n\nOK\n"
+    },
+    "deep": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 7.032955169677734,
+      "tail": "OK deterministic properties and 4 stress runs\n"
+    }
+  },
+  {
+    "target": "runledger",
+    "bug": "runledger-deferred-transactions",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.0,
+      "tail": ""
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 3.888289451599121,
+      "tail": "cel(fs.pop())\n          ~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/usr/lib/python3.13/concurrent/futures/_base.py\", line 318, in _result_or_cancel\n    return fut.result(timeout)\n           ~~~~~~~~~~^^^^^^^^^\n  File \"/usr/lib/python3.13/concurrent/futures/_base.py\", line 453, in result\n    return self.__get_result()\n           ~~~~~~~~~~~~~~~~~^^\n  File \"/usr/lib/python3.13/concurrent/futures/_base.py\", line 402, in __get_result\n    raise self._exception\n  File \"/usr/lib/python3.13/concurrent/futures/thread.py\", line 59, in run\n    result = self.fn(*self.args, **self.kwargs)\n  File \"/tmp/heisenbench-c4tz6hk9/runledger-deferred-transactions/tests/test_runledger.py\", line 46, in <lambda>\n    claims = list(pool.map(lambda i: self.db.claim(f\"worker-{i}\"), range(24)))\n                                     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/tmp/heisenbench-c4tz6hk9/runledger-deferred-transactions/runledger/db.py\", line 113, in claim\n    con.execute(\"UPDATE jobs SET state='running',attempt=?,lease_owner=?,lease_token=?,lease_until=?,updated=? WHERE id=?\",\n    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                (attempt, owner, token, now + lease_seconds, now, row[\"id\"]))\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nsqlite3.OperationalError: database is locked\n\n----------------------------------------------------------------------\nRan 15 tests in 3.678s\n\nFAILED (errors=1)\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 47.428560733795166,
+      "tail": "FAIL stress seed 0: submit raised OperationalError: database is locked (1277 errors)\n"
+    }
+  },
+  {
+    "target": "runledger",
+    "bug": "runledger-lease-expiry-not-fenced",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.0,
+      "tail": ""
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 3.4378647804260254,
+      "tail": "3/urllib/request.py\", line 489, in open\n    response = self._open(req, data)\n  File \"/usr/lib/python3.13/urllib/request.py\", line 506, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n                              '_open', req)\n  File \"/usr/lib/python3.13/urllib/request.py\", line 466, in _call_chain\n    result = func(*args)\n  File \"/usr/lib/python3.13/urllib/request.py\", line 1360, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/urllib/request.py\", line 1334, in do_open\n    raise URLError(err)\nurllib.error.URLError: <urlopen error [Errno 32] Broken pipe>\n\n======================================================================\nFAIL: test_expired_worker_cannot_complete_heartbeat_or_fail (test_runledger.DatabaseTests.test_expired_worker_cannot_complete_heartbeat_or_fail)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/heisenbench-c4tz6hk9/runledger-lease-expiry-not-fenced/tests/test_runledger.py\", line 53, in test_expired_worker_cannot_complete_heartbeat_or_fail\n    self.assertFalse(self.db.complete(job, first[\"lease_token\"], {\"wrong\": 1}))\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: True is not false\n\n----------------------------------------------------------------------\nRan 15 tests in 3.251s\n\nFAILED (failures=1, errors=1)\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 0.20398664474487305,
+      "tail": "FAIL complete accepted after lease expiry (lease=0.5)\n"
+    }
+  },
+  {
+    "target": "runledger",
+    "bug": "runledger-extra-retry-after-failure",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.0,
+      "tail": ""
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 3.607560873031616,
+      "tail": "/lib/python3.13/urllib/request.py\", line 489, in open\n    response = self._open(req, data)\n  File \"/usr/lib/python3.13/urllib/request.py\", line 506, in _open\n    result = self._call_chain(self.handle_open, protocol, protocol +\n                              '_open', req)\n  File \"/usr/lib/python3.13/urllib/request.py\", line 466, in _call_chain\n    result = func(*args)\n  File \"/usr/lib/python3.13/urllib/request.py\", line 1360, in http_open\n    return self.do_open(http.client.HTTPConnection, req)\n           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/urllib/request.py\", line 1334, in do_open\n    raise URLError(err)\nurllib.error.URLError: <urlopen error [Errno 32] Broken pipe>\n\n======================================================================\nFAIL: test_retry_budget_dead_letter_and_deterministic_backoff (test_runledger.DatabaseTests.test_retry_budget_dead_letter_and_deterministic_backoff)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/heisenbench-c4tz6hk9/runledger-extra-retry-after-failure/tests/test_runledger.py\", line 78, in test_retry_budget_dead_letter_and_deterministic_backoff\n    self.assertEqual(self.db.get(job)[\"state\"], \"dead\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'retry_wait' != 'dead'\n- retry_wait\n+ dead\n\n\n----------------------------------------------------------------------\nRan 15 tests in 3.481s\n\nFAILED (failures=1, errors=1)\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 0.5506024360656738,
+      "tail": "FAIL job ran 2 times with max_attempts=1\n"
+    }
+  },
+  {
+    "target": "runledger",
+    "bug": "runledger-claim-skips-reaper",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.0,
+      "tail": ""
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 13.009418725967407,
+      "tail": "/usr/lib/python3.13/subprocess.py\", line 1223, in communicate\n    stdout, stderr = self._communicate(input, endtime, timeout)\n                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/subprocess.py\", line 2156, in _communicate\n    self._check_timeout(endtime, orig_timeout, stdout, stderr)\n    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/subprocess.py\", line 1270, in _check_timeout\n    raise TimeoutExpired(\n    ...<2 lines>...\n            stderr=b''.join(stderr_seq) if stderr_seq else None)\nsubprocess.TimeoutExpired: Command '['/usr/bin/python3', '-m', 'runledger', '--db', '/tmp/tmpk92xn_ff/jobs.sqlite', 'worker', '--max-jobs', '1', '--lease-seconds', '1']' timed out after 10 seconds\n\n======================================================================\nFAIL: test_expiry_on_last_attempt_becomes_dead (test_runledger.DatabaseTests.test_expiry_on_last_attempt_becomes_dead)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/heisenbench-c4tz6hk9/runledger-claim-skips-reaper/tests/test_runledger.py\", line 86, in test_expiry_on_last_attempt_becomes_dead\n    self.assertEqual(self.db.get(job)[\"state\"], \"dead\")\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'running' != 'dead'\n- running\n+ dead\n\n\n----------------------------------------------------------------------\nRan 15 tests in 12.861s\n\nFAILED (failures=1, errors=2)\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 1.4184629917144775,
+      "tail": "FAIL job whose leases all expired is not dead\n"
+    }
+  },
+  {
+    "target": "runledger",
+    "bug": "runledger-idempotency-ignores-attempt-limit",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.0,
+      "tail": ""
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 3.8019497394561768,
+      "tail": "{\"job\": \"fa1e291b705342f19cfe04280c340e24\", \"attempt\": 1, \"committed\": true}\n{\"job\": \"a7b495fba41243efab0245e565637e28\", \"attempt\": 1, \"committed\": true}\n....F..........\n======================================================================\nFAIL: test_idempotent_concurrent_submission_and_conflict (test_runledger.DatabaseTests.test_idempotent_concurrent_submission_and_conflict)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/heisenbench-c4tz6hk9/runledger-idempotency-ignores-attempt-limit/tests/test_runledger.py\", line 41, in test_idempotent_concurrent_submission_and_conflict\n    with self.assertRaises(Conflict): self.db.submit(\"same\", fixture(), 4)\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^\nAssertionError: Conflict not raised\n\n----------------------------------------------------------------------\nRan 15 tests in 3.623s\n\nFAILED (failures=1)\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 1.9845771789550781,
+      "tail": "FAIL conflicting resubmission under an existing idempotency key was accepted\n"
+    }
+  },
+  {
+    "target": "quorumlog",
+    "bug": null,
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 13.605860471725464,
+      "tail": "g++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/sim_main.cpp -o build/quorum-sim \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_core.cpp -o build/core-tests \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_storage.cpp -o build/storage-tests \n"
+    },
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 4.89945912361145,
+      "tail": "core tests passed: 52 cases, 7687 assertions\nstorage tests passed: 15 cases, 315 assertions\n"
+    },
+    "deep": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 90.45808005332947,
+      "tail": "seeds=10000 failures=0 nodes=3-5 clients=4 bug=none\noperations=3064206 unanswered=0 committed=3252777 leader_changes=130248\nmessages=91062828 dropped=13566619 crashes=131624 restarts=131624 partitions=321293 stalls=41792 snapshot_installs=80168\nchecker_states=3495607 seconds=90.4474\n"
+    }
+  },
+  {
+    "target": "quorumlog",
+    "bug": "quorumlog-commit-unverified-suffix",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 14.034279346466064,
+      "tail": "g++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/sim_main.cpp -o build/quorum-sim \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_core.cpp -o build/core-tests \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_storage.cpp -o build/storage-tests \n"
+    },
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 3.147383213043213,
+      "tail": "core tests passed: 52 cases, 7687 assertions\nstorage tests passed: 15 cases, 315 assertions\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 91.74778532981873,
+      "tail": "FAIL seed=709 tick=1595 state-machine-safety: node 1 applied a different entry at index 153\nFAIL seed=1375 tick=1529 state-machine-safety: node 2 applied a different entry at index 88\nFAIL seed=3516 tick=2034 state-machine-safety: node 3 applied a different entry at index 201\nFAIL seed=4805 tick=1785 state-machine-safety: node 5 applied a different entry at index 334\nseeds=10000 failures=4 nodes=3-5 clients=4 bug=none\noperations=3064596 unanswered=12 committed=3253144 leader_changes=130227\nmessages=91074490 dropped=13562190 crashes=131604 restarts=131603 partitions=321171 stalls=41780 snapshot_installs=80167\nchecker_states=3495110 seconds=91.7419\n"
+    }
+  },
+  {
+    "target": "quorumlog",
+    "bug": "quorumlog-snapshot-keeps-conflicting-suffix",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 12.242103338241577,
+      "tail": "g++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/sim_main.cpp -o build/quorum-sim \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_core.cpp -o build/core-tests \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_storage.cpp -o build/storage-tests \n"
+    },
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 2.9139513969421387,
+      "tail": "core tests passed: 52 cases, 7687 assertions\nstorage tests passed: 15 cases, 315 assertions\n"
+    },
+    "deep": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 89.18703007698059,
+      "tail": "seeds=10000 failures=0 nodes=3-5 clients=4 bug=none\noperations=3065561 unanswered=0 committed=3254244 leader_changes=130295\nmessages=91099589 dropped=13574044 crashes=131630 restarts=131630 partitions=321434 stalls=41782 snapshot_installs=80167\nchecker_states=3497195 seconds=89.1815\n"
+    }
+  },
+  {
+    "target": "quorumlog",
+    "bug": "quorumlog-stale-snapshot-rolls-back",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 12.144027948379517,
+      "tail": "g++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/sim_main.cpp -o build/quorum-sim \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_core.cpp -o build/core-tests \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_storage.cpp -o build/storage-tests \n"
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 0.31926703453063965,
+      "tail": "FAILED simulation: 240 fault-injected clusters keep every guarantee: seed 32: commit-regression: node 2 un-committed entries\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 85.33990979194641,
+      "tail": "845 tick=4035 commit-regression: node 2 un-committed entries\nFAIL seed=9867 tick=4022 commit-regression: node 2 un-committed entries\nFAIL seed=9875 tick=4016 commit-regression: node 1 un-committed entries\nFAIL seed=9887 tick=3585 commit-regression: node 4 un-committed entries\nFAIL seed=9900 tick=1675 commit-regression: node 3 un-committed entries\nFAIL seed=9907 tick=1238 commit-regression: node 2 un-committed entries\nFAIL seed=9908 tick=3038 commit-regression: node 5 un-committed entries\nFAIL seed=9919 tick=1508 commit-regression: node 4 un-committed entries\nFAIL seed=9926 tick=698 commit-regression: node 1 un-committed entries\nFAIL seed=9933 tick=4012 commit-regression: node 2 un-committed entries\nFAIL seed=9935 tick=3686 commit-regression: node 1 un-committed entries\nFAIL seed=9938 tick=362 commit-regression: node 3 un-committed entries\nFAIL seed=9939 tick=2719 commit-regression: node 2 un-committed entries\nFAIL seed=9940 tick=3547 commit-regression: node 3 un-committed entries\nFAIL seed=9955 tick=4036 commit-regression: node 3 un-committed entries\nFAIL seed=9973 tick=1698 commit-regression: node 4 un-committed entries\nFAIL seed=9983 tick=875 commit-regression: node 5 un-committed entries\nseeds=10000 failures=1100 nodes=3-5 clients=4 bug=none\noperations=2881912 unanswered=2823 committed=3061469 leader_changes=123392\nmessages=85255885 dropped=12725600 crashes=124321 restarts=124097 partitions=304056 stalls=39735 snapshot_installs=74734\nchecker_states=3048895 seconds=85.3318\n"
+    }
+  },
+  {
+    "target": "quorumlog",
+    "bug": "quorumlog-vote-not-persisted",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 14.95266580581665,
+      "tail": "g++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/sim_main.cpp -o build/quorum-sim \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_core.cpp -o build/core-tests \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_storage.cpp -o build/storage-tests \n"
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 0.00918436050415039,
+      "tail": "FAILED a vote survives a restart: line 278: net[2].vote() == 1\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 90.91701364517212,
+      "tail": "wo leaders in term 1\nFAIL seed=8403 tick=19 election-safety: two leaders in term 1\nFAIL seed=8409 tick=2240 election-safety: two leaders in term 10\nFAIL seed=8555 tick=20 election-safety: two leaders in term 1\nFAIL seed=8589 tick=24 election-safety: two leaders in term 1\nFAIL seed=8873 tick=20 election-safety: two leaders in term 1\nFAIL seed=8885 tick=227 election-safety: two leaders in term 2\nFAIL seed=8886 tick=18 election-safety: two leaders in term 1\nFAIL seed=8942 tick=20 election-safety: two leaders in term 1\nFAIL seed=8954 tick=22 election-safety: two leaders in term 1\nFAIL seed=8963 tick=21 election-safety: two leaders in term 1\nFAIL seed=9236 tick=869 election-safety: two leaders in term 6\nFAIL seed=9350 tick=1328 election-safety: two leaders in term 5\nFAIL seed=9410 tick=18 election-safety: two leaders in term 1\nFAIL seed=9497 tick=2534 election-safety: two leaders in term 16\nFAIL seed=9627 tick=21 election-safety: two leaders in term 1\nFAIL seed=9659 tick=19 election-safety: two leaders in term 1\nFAIL seed=9765 tick=3405 election-safety: two leaders in term 14\nFAIL seed=9843 tick=556 election-safety: two leaders in term 6\nFAIL seed=9971 tick=609 election-safety: two leaders in term 3\nseeds=10000 failures=93 nodes=3-5 clients=4 bug=none\noperations=3040630 unanswered=364 committed=3227948 leader_changes=129421\nmessages=90337122 dropped=13471199 crashes=130588 restarts=130584 partitions=318688 stalls=41345 snapshot_installs=79557\nchecker_states=3459231 seconds=90.909\n"
+    }
+  },
+  {
+    "target": "quorumlog",
+    "bug": "quorumlog-follower-skips-term-check",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 16.373207092285156,
+      "tail": "g++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/sim_main.cpp -o build/quorum-sim \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_core.cpp -o build/core-tests \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_storage.cpp -o build/storage-tests \n"
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 0.009790897369384766,
+      "tail": "FAILED a deposed leader's uncommitted entries are replaced: line 235: same_log(net[1], net[2])\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 137,
+      "seconds": 144.77971625328064,
+      "tail": "Killed\n"
+    }
+  },
+  {
+    "target": "quorumlog",
+    "bug": "quorumlog-restore-merges-sessions",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 15.167115688323975,
+      "tail": "g++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/sim_main.cpp -o build/quorum-sim \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_core.cpp -o build/core-tests \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_storage.cpp -o build/storage-tests \n"
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 0.16378474235534668,
+      "tail": "FAILED simulation: 240 fault-injected clusters keep every guarantee: seed 2: snapshot-divergence: node 1 loaded a snapshot that differs from the state at index 50\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 26.908437252044678,
+      "tail": " seed=9990 tick=2857 snapshot-divergence: node 1 loaded a snapshot that differs from the state at index 145\nFAIL seed=9991 tick=354 snapshot-divergence: node 3 loaded a snapshot that differs from the state at index 48\nFAIL seed=9992 tick=294 snapshot-divergence: node 2 loaded a snapshot that differs from the state at index 48\nFAIL seed=9993 tick=1129 snapshot-divergence: node 2 loaded a snapshot that differs from the state at index 144\nFAIL seed=9994 tick=4022 snapshot-divergence: node 1 loaded a snapshot that differs from the state at index 121\nFAIL seed=9995 tick=856 snapshot-divergence: node 1 loaded a snapshot that differs from the state at index 147\nFAIL seed=9996 tick=860 snapshot-divergence: node 2 loaded a snapshot that differs from the state at index 72\nFAIL seed=9997 tick=274 snapshot-divergence: node 3 loaded a snapshot that differs from the state at index 48\nFAIL seed=9998 tick=917 snapshot-divergence: node 2 loaded a snapshot that differs from the state at index 144\nFAIL seed=9999 tick=255 snapshot-divergence: node 3 loaded a snapshot that differs from the state at index 48\nFAIL seed=10000 tick=1549 snapshot-divergence: node 4 loaded a snapshot that differs from the state at index 72\nseeds=10000 failures=9747 nodes=3-5 clients=4 bug=none\noperations=980954 unanswered=32120 committed=1042683 leader_changes=47638\nmessages=27212657 dropped=4123972 crashes=42678 restarts=39299 partitions=101758 stalls=15224 snapshot_installs=17571\nchecker_states=29850 seconds=26.9015\n"
+    }
+  },
+  {
+    "target": "quorumlog",
+    "bug": "quorumlog-compact-mislabels-snapshot",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 14.12067723274231,
+      "tail": "g++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/sim_main.cpp -o build/quorum-sim \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_core.cpp -o build/core-tests \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_storage.cpp -o build/storage-tests \n"
+    },
+    "unit": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 0.13767385482788086,
+      "tail": "FAILED sessions and state survive a snapshot and restart: line 1058: store.digest() == expected.digest()\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 12.953372240066528,
+      "tail": "index 30\nFAIL seed=9990 tick=404 snapshot-divergence: node 2 loaded a snapshot that differs from the state at index 30\nFAIL seed=9991 tick=467 snapshot-divergence: node 4 loaded a snapshot that differs from the state at index 30\nFAIL seed=9992 tick=260 snapshot-divergence: node 5 loaded a snapshot that differs from the state at index 30\nFAIL seed=9993 tick=154 snapshot-divergence: node 1 loaded a snapshot that differs from the state at index 30\nFAIL seed=9994 tick=1256 snapshot-divergence: node 2 loaded a snapshot that differs from the state at index 120\nFAIL seed=9995 tick=310 snapshot-divergence: node 1 loaded a snapshot that differs from the state at index 61\nFAIL seed=9996 tick=622 snapshot-divergence: node 1 loaded a snapshot that differs from the state at index 62\nFAIL seed=9997 tick=276 snapshot-divergence: node 3 loaded a snapshot that differs from the state at index 60\nFAIL seed=9998 tick=256 snapshot-divergence: node 5 loaded a snapshot that differs from the state at index 60\nFAIL seed=9999 tick=255 snapshot-divergence: node 3 loaded a snapshot that differs from the state at index 30\nFAIL seed=10000 tick=236 snapshot-divergence: node 4 loaded a snapshot that differs from the state at index 30\nseeds=10000 failures=9982 nodes=3-5 clients=4 bug=none\noperations=495433 unanswered=30928 committed=527622 leader_changes=24348\nmessages=13130218 dropped=1862011 crashes=19457 restarts=15068 partitions=39963 stalls=7206 snapshot_installs=8463\nchecker_states=443 seconds=12.9404\n"
+    }
+  },
+  {
+    "target": "tickforge",
+    "bug": "tickforge-producer-reads-tail-relaxed",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 2.546386957168579,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror tests/test.cpp -pthread -o build/tests\n"
+    },
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.3718869686126709,
+      "tail": "./build/tests\nPASS: 30110 assertions; 1,600,000 concurrent transfers; allocation probes for both queues\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 66,
+      "seconds": 1.367457628250122,
+      "tail": "ess /home/user/heisenbench/oracles/tickforge_deep.cpp:64 (tickforge-deep-tsan+0x3e10)\n    #10 main /home/user/heisenbench/oracles/tickforge_deep.cpp:127 (tickforge-deep-tsan+0x3e10)\n\n  Thread T1 (tid=19711, running) created by main thread at:\n    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)\n    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)\n    #2 __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58 (libc.so.6+0x2a1c9) (BuildId: a4a7992a8e66555c8141ab2a08a8465ff6e0ea65)\n\n  Thread T2 (tid=19712, running) created by main thread at:\n    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)\n    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)\n    #2 __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58 (libc.so.6+0x2a1c9) (BuildId: a4a7992a8e66555c8141ab2a08a8465ff6e0ea65)\n\nSUMMARY: ThreadSanitizer: data race /tmp/heisenbench-fx7qkaxt/tickforge-producer-reads-tail-relaxed/include/tickforge.hpp:150 in push\n==================\n"
+    }
+  },
+  {
+    "target": "tickforge",
+    "bug": "tickforge-consumer-frees-relaxed",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 2.1794917583465576,
+      "tail": "g++ -Iinclude -O3 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Werror tests/test.cpp -pthread -o build/tests\n"
+    },
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.4663848876953125,
+      "tail": "./build/tests\nPASS: 30110 assertions; 1,600,000 concurrent transfers; allocation probes for both queues\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 66,
+      "seconds": 1.1997289657592773,
+      "tail": "9 stress /home/user/heisenbench/oracles/tickforge_deep.cpp:64 (tickforge-deep-tsan+0x3e10)\n    #10 main /home/user/heisenbench/oracles/tickforge_deep.cpp:127 (tickforge-deep-tsan+0x3e10)\n\n  Thread T1 (tid=19745, running) created by main thread at:\n    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)\n    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)\n    #2 __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58 (libc.so.6+0x2a1c9) (BuildId: a4a7992a8e66555c8141ab2a08a8465ff6e0ea65)\n\n  Thread T2 (tid=19746, running) created by main thread at:\n    #0 pthread_create ../../../../src/libsanitizer/tsan/tsan_interceptors_posix.cpp:1022 (libtsan.so.2+0x5ac1a) (BuildId: 2a13a7710e361d06f7babbea53065ca2be93f738)\n    #1 std::thread::_M_start_thread(std::unique_ptr<std::thread::_State, std::default_delete<std::thread::_State> >, void (*)()) <null> (libstdc++.so.6+0xeceb0) (BuildId: 753c6c8608b61d4e67be8f0c890e03e0aa046b8b)\n    #2 __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58 (libc.so.6+0x2a1c9) (BuildId: a4a7992a8e66555c8141ab2a08a8465ff6e0ea65)\n\nSUMMARY: ThreadSanitizer: data race /tmp/heisenbench-l7t2o4iw/tickforge-consumer-frees-relaxed/include/tickforge.hpp:150 in push\n==================\n"
+    }
+  },
+  {
+    "target": "runledger",
+    "bug": "runledger-short-busy-timeout",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 0.0,
+      "tail": ""
+    },
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 3.840531587600708,
+      "tail": "{\"job\": \"166cec54fa084785adb54a5f4ba5c3fe\", \"attempt\": 1, \"committed\": true}\n{\"job\": \"fbceff0519714073a2e3cbb96f2a47ec\", \"attempt\": 1, \"committed\": true}\n...............\n----------------------------------------------------------------------\nRan 15 tests in 3.633s\n\nOK\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 2.534813404083252,
+      "tail": "FAIL stress seed 0: claim raised OperationalError: database is locked (110 errors)\n"
+    }
+  },
+  {
+    "target": "matching-engine",
+    "bug": "matching-level-total-int32",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 5.243973731994629,
+      "tail": "s; typename Index::iterator = std::__detail::_Insert_base<long unsigned int, std::pair<const long unsigned int, matching::Engine<matching::FlatLevels>::Locator>, std::allocator<std::pair<const long unsigned int, matching::Engine<matching::FlatLevels>::Locator> >, std::__detail::_Select1st, std::equal_to<long unsigned int>, std::hash<long unsigned int>, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<false, false, true> >::iterator; Index = std::unordered_map<long unsigned int, matching::Engine<matching::FlatLevels>::Locator, std::hash<long unsigned int>, std::equal_to<long unsigned int>, std::allocator<std::pair<const long unsigned int, matching::Engine<matching::FlatLevels>::Locator> > >]\u2019:\ninclude/matching/engine.hpp:57:9:   required from \u2018matching::Outcome matching::Engine<Levels>::cancel(matching::OrderId) [with Levels = matching::FlatLevels; matching::OrderId = long unsigned int]\u2019\ninclude/matching/command.hpp:24:50:   required from \u2018matching::Outcome matching::Command::apply(EngineType&) const [with EngineType = matching::Engine<matching::FlatLevels>]\u2019\ntests/test_engine.cpp:203:47:   required from here\ninclude/matching/engine.hpp:244:25: warning: conversion from \u2018matching::Quantity\u2019 {aka \u2018long int\u2019} to \u2018int32_t\u2019 {aka \u2018int\u2019} may change value [-Wconversion]\n  244 |         level->quantity -= it->second.order->quantity;\n      |         ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"
+    },
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 4.702585935592651,
+      "tail": "r> >, std::__detail::_Select1st, std::equal_to<long unsigned int>, std::hash<long unsigned int>, std::__detail::_Mod_range_hashing, std::__detail::_Default_ranged_hash, std::__detail::_Prime_rehash_policy, std::__detail::_Hashtable_traits<false, false, true> >::iterator; Index = std::unordered_map<long unsigned int, matching::Engine<matching::FlatLevels>::Locator, std::hash<long unsigned int>, std::equal_to<long unsigned int>, std::allocator<std::pair<const long unsigned int, matching::Engine<matching::FlatLevels>::Locator> > >]\u2019:\ninclude/matching/engine.hpp:57:9:   required from \u2018matching::Outcome matching::Engine<Levels>::cancel(matching::OrderId) [with Levels = matching::FlatLevels; matching::OrderId = long unsigned int]\u2019\ninclude/matching/command.hpp:24:50:   required from \u2018matching::Outcome matching::Command::apply(EngineType&) const [with EngineType = matching::Engine<matching::FlatLevels>]\u2019\nsrc/benchmark.cpp:174:69:   required from \u2018{anonymous}::Measurement {anonymous}::measure(const Workload&) [with E = matching::Engine<matching::FlatLevels>]\u2019\nsrc/benchmark.cpp:273:47:   required from here\ninclude/matching/engine.hpp:244:25: warning: conversion from \u2018matching::Quantity\u2019 {aka \u2018long int\u2019} to \u2018int32_t\u2019 {aka \u2018int\u2019} may change value [-Wconversion]\n  244 |         level->quantity -= it->second.order->quantity;\n      |         ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n.......\n----------------------------------------------------------------------\nRan 7 tests in 0.047s\n\nOK\n"
+    },
+    "deep": {
+      "ok": false,
+      "returncode": 1,
+      "seconds": 4.109638452529907,
+      "tail": "FAIL book invariant: level aggregate mismatch (regime large-quantities, seed 5)\n"
+    }
+  },
+  {
+    "target": "quorumlog",
+    "bug": "quorumlog-compact-after-install",
+    "build": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 14.20693564414978,
+      "tail": "g++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow src/sim_main.cpp -o build/quorum-sim \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_core.cpp -o build/core-tests \ng++ -Iinclude -Ithird_party -O2 -DNDEBUG -std=c++20 -Wall -Wextra -Wpedantic -Wconversion -Wshadow tests/test_storage.cpp -o build/storage-tests \n"
+    },
+    "unit": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 4.525207281112671,
+      "tail": "core tests passed: 52 cases, 7687 assertions\nstorage tests passed: 15 cases, 315 assertions\n"
+    },
+    "deep": {
+      "ok": true,
+      "returncode": 0,
+      "seconds": 92.9992036819458,
+      "tail": "seeds=10000 failures=0 nodes=3-5 clients=4 bug=none\noperations=3064206 unanswered=0 committed=3252777 leader_changes=130248\nmessages=91062828 dropped=13566619 crashes=131624 restarts=131624 partitions=321293 stalls=41792 snapshot_installs=80168\nchecker_states=3495607 seconds=92.9866\n"
+    }
+  }
+]

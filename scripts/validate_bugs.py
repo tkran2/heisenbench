@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from heisenbench import oracle  # noqa: E402
-from heisenbench.bugspecs import BUGS  # noqa: E402
+from heisenbench.bugspecs import BUGS, REJECTED  # noqa: E402
 from heisenbench.sandbox import materialize  # noqa: E402
 from heisenbench.targets import TARGETS  # noqa: E402
 
@@ -72,7 +72,7 @@ def write_table(records):
     rows = ["| Bug | Category | Unit tests | Deep oracle |", "| --- | --- | --- | --- |"]
     by_id = {b.id: b for b in BUGS}
     for r in sorted(records, key=lambda r: (r["target"], r["bug"] or "")):
-        if r["bug"] is None:
+        if r["bug"] is None or r["bug"] not in by_id:  # pristine runs and rejected candidates
             continue
         if not r["build"]["ok"]:
             rows.append(f"| `{r['bug']}` | {by_id[r['bug']].category} | build failed | build failed |")

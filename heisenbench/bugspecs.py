@@ -51,21 +51,6 @@ BUGS: list[Bug] = [
                     "        advance_commit(std::min(m.leader_commit, log_.last_index()));"),),
     ),
     Bug(
-        id="quorumlog-snapshot-keeps-conflicting-suffix",
-        target="quorumlog",
-        category="consensus safety",
-        issue=(
-            "A follower that was offline for a long time and caught up through a snapshot sometimes keeps "
-            "log entries after the snapshot point that the leader never had. Later it can apply commands "
-            "the rest of the cluster did not."
-        ),
-        explanation="InstallSnapshot keeps the log suffix whenever the index exists, without checking its term.",
-        edits=(Edit("include/quorum/raft.hpp",
-                    "        const bool keep_suffix =\n"
-                    "            log_.has(m.snap_index) && log_.term_at(m.snap_index) == m.snap_term;",
-                    "        const bool keep_suffix = log_.has(m.snap_index);"),),
-    ),
-    Bug(
         id="quorumlog-stale-snapshot-rolls-back",
         target="quorumlog",
         category="consensus safety",
@@ -310,6 +295,104 @@ BUGS: list[Bug] = [
         edits=(Edit("include/tickforge.hpp",
                     "            generation_ = message.generation; have_sequence_ = false; trusted_ = false;",
                     "            generation_ = message.generation; have_sequence_ = false;"),),
+    ),
+    Bug(
+        id="matching-level-total-int32",
+        target="matching-engine",
+        category="book accounting",
+        issue=(
+            "With very large orders, the aggregate size reported for a price level sometimes wraps around "
+            "to a negative number."
+        ),
+        explanation=(
+            "PriceLevel's aggregate quantity was narrowed to 32 bits; several near-maximum orders at one "
+            "price overflow it."
+        ),
+        edits=(Edit("include/matching/levels.hpp",
+                    "    Quantity quantity{};\n    std::list<RestingOrder> orders;",
+                    "    std::int32_t quantity{}; // 32 bits keeps the level header compact\n    std::list<RestingOrder> orders;"),),
+    ),
+    Bug(
+        id="runledger-short-busy-timeout",
+        target="runledger",
+        category="concurrency",
+        issue=(
+            "Under a burst of submissions with several workers running, a few API calls fail with "
+            "\"database is locked\". It never happens on a quiet system."
+        ),
+        explanation="The SQLite busy timeout was cut from 10 s to 50 ms, so contended writers give up instead of waiting.",
+        edits=(Edit("runledger/db.py",
+                    "        con = sqlite3.connect(self.path, timeout=10)",
+                    "        con = sqlite3.connect(self.path, timeout=0.05)  # local file: no need to wait long"),),
+    ),
+    Bug(
+        id="tickforge-producer-reads-tail-relaxed",
+        target="tickforge",
+        category="memory ordering",
+        issue=(
+            "ThreadSanitizer reports a race between the consumer reading a slot and the producer writing the "
+            "same slot on the next lap around the ring."
+        ),
+        explanation="push() reads the consumer's tail with a relaxed load, so slot reuse is not ordered after the consumer's read.",
+        edits=(Edit("include/tickforge.hpp",
+                    "        if (head - tail_.value.load(std::memory_order_acquire) == slots_.size()) return false;",
+                    "        if (head - tail_.value.load(std::memory_order_relaxed) == slots_.size()) return false;"),),
+    ),
+    Bug(
+        id="tickforge-consumer-frees-relaxed",
+        target="tickforge",
+        category="memory ordering",
+        issue=(
+            "Under heavy load on a weakly ordered machine, a popped item is occasionally overwritten while "
+            "the consumer is still copying it."
+        ),
+        explanation="pop() frees the slot with a relaxed store, so the consumer's read is not released before reuse.",
+        edits=(Edit("include/tickforge.hpp",
+                    "        tail_.value.store(tail + 1, std::memory_order_release);",
+                    "        tail_.value.store(tail + 1, std::memory_order_relaxed);"),),
+    ),
+]
+
+# Candidate bugs that turned out to be harmless (equivalent mutants), kept for the record.
+REJECTED: list[Bug] = [
+    Bug(
+        id="quorumlog-snapshot-keeps-conflicting-suffix",
+        target="quorumlog",
+        category="consensus safety (equivalent mutant)",
+        issue=(
+            "A follower that was offline for a long time and caught up through a snapshot sometimes keeps "
+            "log entries after the snapshot point that the leader never had. Later it can apply commands "
+            "the rest of the cluster did not."
+        ),
+        explanation=(
+            "InstallSnapshot keeps the log suffix whenever the index exists, without checking its term. "
+            "Harmless here: kept entries from another term are repaired by the next AppendEntries consistency "
+            "check before they can commit, because a follower only commits through the prefix it has just "
+            "verified against the leader. 10,000 simulated clusters and the unit tests agree: no violation."
+        ),
+        edits=(Edit("include/quorum/raft.hpp",
+                    "        const bool keep_suffix =\n"
+                    "            log_.has(m.snap_index) && log_.term_at(m.snap_index) == m.snap_term;",
+                    "        const bool keep_suffix = log_.has(m.snap_index);"),),
+    ),
+
+    Bug(
+        id="quorumlog-compact-after-install",
+        target="quorumlog",
+        category="snapshotting (not exercised by any oracle)",
+        issue=(
+            "A follower occasionally aborts with \"can only compact committed, uncompacted entries\" a little "
+            "while after it caught up from the leader's snapshot."
+        ),
+        explanation=(
+            "A snapshot staged for local compaction is no longer discarded when an installed snapshot has "
+            "already moved the log base past it, so compaction later targets an index inside the snapshot. "
+            "A real bug, but neither the unit tests nor 10,000 simulated clusters reach that interleaving, "
+            "so it cannot be scored and is excluded."
+        ),
+        edits=(Edit("include/quorum/replica.hpp",
+                    "        if (staged_ && staged_->index <= base) staged_.reset(); // Superseded by an install.\n",
+                    ""),),
     ),
 ]
 
