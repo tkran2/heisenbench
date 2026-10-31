@@ -95,7 +95,7 @@ four that escape the unit tests with two that do not:
 | `quorumlog-vote-not-persisted` | no | fixed | 119 s | 8 | persist the vote before replying |
 | `matching-equal-amend-loses-priority` | no | fixed | 45 s | 6 | restore `<=` in the in-place amend condition |
 | `matching-level-total-int32` | yes | fixed | 54 s | 8 | widen the level aggregate back to 64 bits |
-| `runledger-short-busy-timeout` | yes | fixed | 13 s | 6 | restore a 10 s busy timeout |
+| `runledger-short-busy-timeout` | yes | fixed | 13 s | 6 | raise the busy timeout to 30 s (the original was 10 s) |
 | `tickforge-publish-relaxed` | yes | fixed | 34 s | 6 | publish the head with release ordering |
 
 Six of six fixed, every patch survives the deep oracle, no plausible-but-wrong
