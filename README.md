@@ -49,6 +49,11 @@ build, a test suite or an oracle.
 | tickforge | `tickforge-producer-reads-tail-relaxed` | memory ordering | missed | caught (1s) |
 | tickforge | `tickforge-consumer-frees-relaxed` | memory ordering | missed | caught (1s) |
 
+RunLedger's unit command runs its whole suite except one HTTP test that races its own
+server (it can see a broken pipe instead of a 413, nearly always on GitHub's runners);
+that test covers request-size limits, which no bug touches. `scripts/selfcheck.py`
+re-derives this table for the matching engine and RunLedger on every push.
+
 Each bug is a one- to three-line edit of the kind people really make: a dropped
 condition, a flipped boundary, a relaxed memory order, a narrowed integer, a guard
 removed from a rare path. Agents see the issue text only; the edit and its

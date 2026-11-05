@@ -69,7 +69,7 @@ TARGETS = {
             language="Python",
             summary="durable job queue on SQLite with idempotency keys and fenced leases",
             build=None,
-            unit="python3 -m unittest discover -s tests",
+            unit="python3 {oracles}/run_unittest.py --exclude test_http_idempotency_conflict_oversize_origin_and_result",
             deep=("python3 {oracles}/runledger_deep.py {target}",),
             protected=("tests/",),
         ),

@@ -42,7 +42,7 @@ def build(target: Target, workdir: Path) -> Run:
 
 
 def unit(target: Target, workdir: Path) -> Run:
-    return run(target.unit, workdir, target.unit_timeout, target.env)
+    return run(target.render(target.unit, workdir), workdir, target.unit_timeout, target.env)
 
 
 def deep(target: Target, workdir: Path) -> Run:
