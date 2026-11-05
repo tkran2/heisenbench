@@ -1,5 +1,7 @@
 # HeisenBench
 
+[![CI](https://github.com/tkran2/heisenbench/actions/workflows/ci.yml/badge.svg)](https://github.com/tkran2/heisenbench/actions/workflows/ci.yml)
+
 Can a coding agent find and fix a bug that a project's own unit tests do not catch,
 and does its fix survive verification that the tests cannot do?
 

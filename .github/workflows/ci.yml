@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  selfcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Bug library applies cleanly
+        run: |
+          python - <<'PY'
+          import pathlib, tempfile
+          from heisenbench.bugspecs import BUGS
+          from heisenbench.sandbox import materialize
+          from heisenbench.targets import TARGETS
+          with tempfile.TemporaryDirectory() as tmp:
+              for b in BUGS:
+                  materialize(TARGETS[b.target], pathlib.Path(tmp) / b.id, b)
+          print(f"{len(BUGS)} bugs apply cleanly")
+          PY
+      - name: Oracle matrix reproduces (matching engine, RunLedger)
+        run: python scripts/selfcheck.py --targets matching-engine runledger
