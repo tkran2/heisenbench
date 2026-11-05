@@ -36,11 +36,19 @@ def main() -> int:
         for name in args.targets:
             target = TARGETS[name]
             work = materialize(target, Path(tmp) / f"{name}-pristine")
-            b, u = oracle.build(target, work), None
-            ok = b.ok and (u := oracle.unit(target, work)).ok and oracle.deep(target, work).ok
-            print(f"{name:16s} pristine                                     {'ok' if ok else 'FAILED'}", flush=True)
-            if not ok:
-                failures.append(f"{name}: pristine snapshot does not pass")
+            stages = [("build", oracle.build)]
+            stages += [("unit tests", oracle.unit), ("deep oracle", oracle.deep)]
+            failed = None
+            for stage, fn in stages:
+                r = fn(target, work)
+                if not r.ok:
+                    failed = (stage, r)
+                    break
+            print(f"{name:16s} pristine                                     "
+                  f"{'ok' if failed is None else 'FAILED at ' + failed[0]}", flush=True)
+            if failed is not None:
+                print("    " + failed[1].tail[-1200:].replace("\n", "\n    "), flush=True)
+                failures.append(f"{name}: pristine snapshot fails its {failed[0]}")
             for bug in (b for b in BUGS if b.target == name):
                 work = materialize(target, Path(tmp) / bug.id, bug)
                 if not oracle.build(target, work).ok:
