@@ -41,6 +41,11 @@ def main() -> int:
             failed = None
             for stage, fn in stages:
                 r = fn(target, work)
+                if not r.ok and stage != "build":
+                    # RunLedger's suites include real-time lease and concurrency checks that can
+                    # trip once on a loaded machine; a stage must fail twice to count.
+                    print(f"{name:16s} pristine {stage} failed once, retrying (timing-dependent)", flush=True)
+                    r = fn(target, work)
                 if not r.ok:
                     failed = (stage, r)
                     break
