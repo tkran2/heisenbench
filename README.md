@@ -119,6 +119,8 @@ possible.
 Requirements: a C++20 compiler with ThreadSanitizer, make, Python 3.10+.
 
 ```bash
+python scripts/list_bugs.py --issues       # the bug library and each issue report
+python scripts/selfcheck.py                # re-derive the matrix for the fast targets (CI runs this)
 python scripts/validate_bugs.py            # every bug through unit tests and deep oracle
 python scripts/run_agents.py --agent reference-fix --cmd 'python3 {repo}/scripts/reference_agent.py fix {workdir}'
 python scripts/run_agents.py --agent claude-code --hints none oracle \
